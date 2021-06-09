@@ -1,7 +1,7 @@
 import fs = require("fs");
 import path = require("path");
 import Config from "./Config";
-import { execSync } from "child_process" 
+import { execSync } from "child_process";
 
 class AudioFile {
     filename: string;
@@ -13,11 +13,6 @@ class AudioFile {
         this.dir = dir;
     }
 
-    ffmpeg(): string {
-        const ffmpeg_path = Config.getInstance().ffmpegPath;
-        return ffmpeg_path;
-    }
-
     derivative(extension: string): string {
         const deriv = this.derivativePath(extension);
         if (!fs.existsSync(deriv)) {
@@ -26,13 +21,15 @@ class AudioFile {
                 fs.mkdirSync(dir, { recursive: true });
             }
             if (this.extensions.includes(extension)) {
-                if (fs.existsSync(this.ffmpeg())) {
-                    const ffmpegCommand = this.ffmpeg() + " -i " + this.dir + "/" + this.filename + " " + deriv;
-                    try {
-                        execSync(ffmpegCommand);
-                    } catch (e) {
-                        console.log(e);
+                const ffmpeg_path = Config.getInstance().ffmpegPath;
+                if (ffmpeg_path) {
+                    const ffmpegCommand = ffmpeg_path + " -i " + this.dir + "/" + this.filename + " " + deriv;
+                    execSync(ffmpegCommand);
+                    if (!fs.existsSync(deriv)) {
+                        throw "Problem generating " + deriv + " with " + ffmpeg_path;
                     }
+                } else {
+                    throw "ffmpeg not configured";
                 }
             }
         }
@@ -48,7 +45,8 @@ class AudioFile {
     }
 
     derivativePath(extension = "flac"): string {
-        const filename = path.basename(this.filename, ".*");
+        const ext = this.filename.substr(this.filename.lastIndexOf("."));
+        const filename = path.basename(this.filename, ext);
         return this.dir + "/" + filename + "." + extension.toLowerCase();
     }
 }
