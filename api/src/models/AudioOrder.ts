@@ -12,7 +12,7 @@ class AudioOrder {
     }
 
     static fromJob(job: Job): AudioOrder {
-        const list = glob.sync(job.dir + "*.flac").map(function (flac: string) {
+        const list = glob.sync(job.dir + "/*.flac").map(function (flac: string) {
             return new AudioFile(path.basename(flac), job.dir);
         });
         return new AudioOrder(list);
