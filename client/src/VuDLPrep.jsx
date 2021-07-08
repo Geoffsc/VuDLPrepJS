@@ -7,6 +7,7 @@ import JobSelector from "./JobSelector";
 import JobPaginator from "./JobPaginator";
 import LogoutButton from "./LogoutButton";
 import MainMenu from "./MainMenu";
+import PdfGenerator from "./PdfGenerator";
 import SolrIndexer from "./SolrIndexer";
 
 class VuDLPrep extends React.Component {
@@ -36,6 +37,9 @@ class VuDLPrep extends React.Component {
                         </Route>
                         <Route path="/paginate/:category/:job">
                             <JobPaginatorHook />
+                        </Route>
+                        <Route exact path="/pdf">
+                            <PdfGenerator />
                         </Route>
                         <Route exact path="/solr">
                             <SolrIndexer />

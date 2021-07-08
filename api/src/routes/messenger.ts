@@ -3,9 +3,20 @@ import Solr from "../services/Solr";
 import SolrIndexer from "../services/SolrIndexer";
 
 import express = require("express");
+import { Queue } from "bullmq";
+import { requireToken } from "./auth";
+import { sanitizeParameters } from "./sanitize";
 const router = express.Router();
 
-router.get("/solrindex/:pid", async function (req, res) {
+const pidSanitizer = sanitizeParameters({ pid: /^[a-zA-Z]+:[0-9]+/ }, /^$/);
+
+router.post("/pdfgenerator/:pid", pidSanitizer, requireToken, async function (req, res) {
+    const q = new Queue("vudl");
+    q.add("generatepdf", { pid: req.params.pid });
+    res.status(200).send("ok");
+});
+
+router.get("/solrindex/:pid", pidSanitizer, requireToken, async function (req, res) {
     const indexer = new SolrIndexer();
     try {
         const fedoraFields = await indexer.getFields(req.params.pid);
@@ -16,7 +27,7 @@ router.get("/solrindex/:pid", async function (req, res) {
     }
 });
 
-router.post("/solrindex/:pid", async function (req, res) {
+router.post("/solrindex/:pid", pidSanitizer, requireToken, async function (req, res) {
     const indexer = new SolrIndexer();
     let fedoraFields = null;
     try {

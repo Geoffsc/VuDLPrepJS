@@ -7,6 +7,7 @@ import Job from "../models/Job";
 
 const router = express.Router();
 import { setupPassport, requireToken } from "./auth";
+import { sanitizeParameters } from "./sanitize";
 import fs = require("fs");
 setupPassport(router);
 
@@ -19,18 +20,6 @@ function getJobFromRequest(req): Job {
 function holdingArea(): string {
     const holdingArea = Config.getInstance().holdingArea;
     return holdingArea.endsWith("/") ? holdingArea : holdingArea + "/";
-}
-
-function sanitizeParameters(customRules = {}) {
-    return function (req, res, next) {
-        const defaultRule = /^[-.a-zA-Z0-9_]+$/;
-        for (const x in req.params) {
-            if (!req.params[x].match(customRules[x] ?? defaultRule)) {
-                return res.status(400).json({ error: "invalid: " + x });
-            }
-        }
-        next();
-    };
 }
 
 router.get("/", requireToken, function (req, res) {

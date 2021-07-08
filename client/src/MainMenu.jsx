@@ -15,6 +15,9 @@ export default function MainMenu() {
             <h2>Other Tools</h2>
             <ul>
                 <li>
+                    <Link to="/pdf">PDF Generator</Link>
+                </li>
+                <li>
                     <Link to="/solr">Solr Indexer</Link>
                 </li>
             </ul>
