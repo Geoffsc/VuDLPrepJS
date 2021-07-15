@@ -91,6 +91,18 @@ button.btn-link {
     box-shadow: none;
 }
 
+.btn--big {
+    box-sizing: border-box;
+    padding: 0.675rem 1.5rem;
+    font-size: 1.2em;
+}
+.btn--none {
+    border: 0;
+    color: currentColor;
+    background-color: transparent;
+    box-shadow: none;
+}
+
 .logout {
     position: absolute;
     top: 12px;
@@ -99,4 +111,23 @@ button.btn-link {
 .logout .button {
     background: #1abc9c;
     border-color: #16a085;
+}
+
+@media (min-width: 768px) {
+    .flex {
+        display: flex;
+        width: 100%;
+    }
+    .flex-1 {
+        flex: 1 1 0%;
+    }
+    .flex-none {
+        flex: none;
+    }
+    .flex-auto {
+        flex: 1 1 auto;
+    }
+    .flex-initial {
+        flex: 0 1 auto;
+    }
 }

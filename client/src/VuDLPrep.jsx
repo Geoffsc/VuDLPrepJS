@@ -3,6 +3,7 @@ import { BrowserRouter, Switch, Route, useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import AjaxHelper from "./AjaxHelper";
+import ObjectEditor from "./Editor/ObjectEditor";
 import JobSelector from "./JobSelector";
 import JobPaginator from "./JobPaginator";
 import LogoutButton from "./LogoutButton";
@@ -26,6 +27,9 @@ class VuDLPrep extends React.Component {
                         <Route exact path="/">
                             <MainMenu />
                         </Route>
+                        <Route path="/editor/object/:pid">
+                            <EditorHook />
+                        </Route>
                         <Route exact path="/paginate">
                             <JobSelector
                                 app={this}
@@ -45,6 +49,11 @@ class VuDLPrep extends React.Component {
             </div>
         );
     }
+}
+
+function EditorHook() {
+    let { pid } = useParams();
+    return <ObjectEditor pid={pid ?? "vudl:1"} />;
 }
 
 function JobPaginatorHook() {
